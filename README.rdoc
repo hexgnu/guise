@@ -14,6 +14,6 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2011 Matt Kirk. See LICENSE.txt for
+Copyright (c) 2011 Modulus 7, LLC. See LICENSE.txt for
 further details.
 

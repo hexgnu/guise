@@ -9,6 +9,7 @@ module Guise
       File.open(File.join(File.dirname(__FILE__), "../../data/stopwords.txt")).each do |line| 
         @bloom_filter.add(line)
       end
+      @rows = []
       @word_set = []
     end
     
@@ -28,11 +29,9 @@ module Guise
     def vote(sentiment, text)
       terms = strip_stopwords(text)
       @word_set |= terms
-      vote = (sentiment > 0) ? "+#{sentiment}" : sentiment
-      terms.each do |term|
-        vote = vote + " " + [@word_set.index(term), 1].join(":")
+      unless terms.empty?
+        @rows << {sentiment => terms}
       end
-      vote
     end
     
     def passes(word)
