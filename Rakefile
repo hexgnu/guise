@@ -7,15 +7,16 @@ jeweler_tasks = Jeweler::Tasks.new do |gem|
   gem.name = "guise"
   gem.homepage = "http://github.com/hexgnu/guise"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Guise is the SVM driven sentiment engine for SocialVolt}
+  gem.description = gem.summary
   gem.email = "matt@matthewkirk.com"
   gem.authors = ["Matt Kirk (Modulus 7, LLC)"]
-  gem.extensions          = FileList['ext/**/extconf.rb']
+  # gem.extensions          = FileList['ext/**/extconf.rb']
   # Include your dependencies below. Runtime dependencies are required when using your gem,
   # and development dependencies are only needed for development (ie running rake tasks, tests, etc)
   #  gem.add_runtime_dependency 'jabber4r', '> 0.1'
   #  gem.add_development_dependency 'rspec', '> 1.2.3'
+  gem.add_runtime_dependency 'hexgnu-libsvm-ruby-swig', '0.1.1'
   gem.add_runtime_dependency 'sanitize', '2.0.1'
   gem.add_development_dependency "rspec", "~> 2.3.0"
   gem.add_development_dependency "yard", "~> 0.6.0"
@@ -34,14 +35,14 @@ Jeweler::RubygemsDotOrgTasks.new
 require 'rake/extensiontask'
 require 'rake/extensiontesttask'
 
-Rake::ExtensionTask.new('guise_native', $gemspec) do |ext|
-    ext.cross_compile   = true
-    ext.cross_platform  = 'x86-mswin32'
-    ext.test_files      = FileList['spec/c/*']
-end
+# Rake::ExtensionTask.new('guise_native', $gemspec) do |ext|
+#     ext.cross_compile   = true
+#     ext.cross_platform  = 'x86-mswin32'
+#     ext.test_files      = FileList['spec/c/*']
+# end
 
-CLEAN.include 'lib/**/*.so'
-CLEAN.include 'lib/**/*.bundle'
+# CLEAN.include 'lib/**/*.so'
+# CLEAN.include 'lib/**/*.bundle'
 
 
 
@@ -73,5 +74,3 @@ task :default => :spec
 
 require 'yard'
 YARD::Rake::YardocTask.new
-
-Rake::Task[:spec].prerequisites << :compile

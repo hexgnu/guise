@@ -224,6 +224,7 @@ r
 rather
 recent
 recently
+rt
 s
 same
 seem
