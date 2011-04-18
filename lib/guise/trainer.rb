@@ -10,16 +10,21 @@ require 'digest/sha1'
 #             Guise::Trainer#vote(sentiment, text)
 module Guise
   class Trainer
+    DIR = File.dirname(__FILE__)
     attr_reader :bloom_filter, :word_set, :rows
     
     
     # Can take in a dictionary of words stored in the database or wherever
     # Initializes a bloomb_filter that will strip out stopwords
-    def initialize(word_set = [])
+    def initialize(word_set = [], load_data = true)
       load_bloom_filter!
       @rows = []
       @word_set = word_set
-      load_training_data!
+      if load_data
+        load_training_data! 
+        load_positive_training_data!
+        load_negative_training_data!
+      end
     end
     
     # Using a bloom filter to load in the stop words and to kill all of them out of the file
@@ -110,9 +115,21 @@ module Guise
     end
     
     private
+    
+    %w[positive negative].each do |sentiment|
+      define_method("load_#{sentiment}_training_data!") do
+        File.open(File.join(DIR, "../../data/#{sentiment}_words.txt")).each do |line|
+          vote((sentiment == "positive") ? 1 : -1, line)
+        end
+      end
+    end
+    
+    
     def load_training_data!
-      YAML::load(File.open(File.join(File.dirname(__FILE__), "../../data/output.yml"))).each do |row|
-        vote(row[:answer].values.first.to_i, row[:question])
+      YAML::load(File.open(File.join(DIR, "../../data/output.yml"))).each do |row|
+        if row[:answer].values.first != "-2" && row[:answer].values.first != "0"
+          vote(row[:answer].values.first.to_i, row[:question])
+        end
       end
     end
     
