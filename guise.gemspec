@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     "data/dictionary.txt",
     "data/output.yml",
     "data/stopwords.txt",
+    "guise.gemspec",
     "lib/guise.rb",
     "lib/guise/bit_field.rb",
     "lib/guise/bloominsimple.rb",
@@ -53,8 +54,7 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.1"])
-      s.add_runtime_dependency(%q<sanitize>, ["= 2.0.1"])
+      s.add_runtime_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.3.1"])
       s.add_development_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_development_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_development_dependency(%q<bundler>, ["~> 1.0.0"])
@@ -65,8 +65,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rake-compiler>, ["~> 0.7.7"])
       s.add_development_dependency(%q<rake-tester>, ["= 0.0.1"])
     else
-      s.add_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.1"])
-      s.add_dependency(%q<sanitize>, ["= 2.0.1"])
+      s.add_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.3.1"])
       s.add_dependency(%q<rspec>, ["~> 2.3.0"])
       s.add_dependency(%q<yard>, ["~> 0.6.0"])
       s.add_dependency(%q<bundler>, ["~> 1.0.0"])
@@ -78,8 +77,7 @@ Gem::Specification.new do |s|
       s.add_dependency(%q<rake-tester>, ["= 0.0.1"])
     end
   else
-    s.add_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.1"])
-    s.add_dependency(%q<sanitize>, ["= 2.0.1"])
+    s.add_dependency(%q<hexgnu-libsvm-ruby-swig>, ["= 0.1.3.1"])
     s.add_dependency(%q<rspec>, ["~> 2.3.0"])
     s.add_dependency(%q<yard>, ["~> 0.6.0"])
     s.add_dependency(%q<bundler>, ["~> 1.0.0"])
