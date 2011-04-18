@@ -127,7 +127,7 @@ module Guise
     
     def load_training_data!
       YAML::load(File.open(File.join(DIR, "../../data/output.yml"))).each do |row|
-        if row[:answer].values.first != "-2" && row[:answer].values.first != "0"
+        if row[:answer].values.first != "-2"
           vote(row[:answer].values.first.to_i, row[:question])
         end
       end
