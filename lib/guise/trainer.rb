@@ -39,6 +39,7 @@ module Guise
           extracted_terms << word
         end
       end
+      extracted_terms
     end
     
     
