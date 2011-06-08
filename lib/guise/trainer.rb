@@ -1,5 +1,3 @@
-require 'digest/sha1'
-
 #        NAME: Guise::Trainer
 #      AUTHOR: Matthew Kirk
 #     LICENSE: Proprietary 
@@ -11,50 +9,38 @@ require 'digest/sha1'
 module Guise
   class Trainer
     DIR = File.dirname(__FILE__)
-    attr_reader :bloom_filter, :word_set, :rows
+    attr_reader :word_set, :rows
     
     
     # Can take in a dictionary of words stored in the database or wherever
-    # Initializes a bloomb_filter that will strip out stopwords
     def initialize(word_set = [], load_data = true)
-      load_bloom_filter!
       @rows = []
       @word_set = word_set
       if load_data
+        puts "Loading training data..."
         load_training_data! 
+        puts "Loading positive training data..."
         load_positive_training_data!
+        puts "Loading negative training data..."
         load_negative_training_data!
       end
     end
     
-    # Using a bloom filter to load in the stop words and to kill all of them out of the file
-    # Strips urls downcases text and takes out html_nuglets.  This tokenizes the text into 
-    # a set of features to build our model on.
+    
+    # Deprecating this method call to use Guise::NLP.clean(text) instead
     def clean(text = "")
-      extracted_terms = []
-      non_alpha = /[^a-z\s]/
-      html_nuglets = /&.+;/
-      Util.strip(text).downcase.gsub(Regexp.union(html_nuglets, non_alpha), '').split(/\s+/).uniq.each do |word| 
-        if passes(word)
-          extracted_terms << word
-        end
-      end
-      extracted_terms
+      warn "Deprecation Warning: Please use Guise::NLP.clean(text) instead"
+      Guise::NLP.clean(text)
     end
     
     
     # The sentiment [-1, 0, 1] maps to [negative, neutral, positive] and the text is the features to regress on
     def vote(sentiment, text)
-      terms = clean(text)
+      terms = Guise::NLP.clean(text)
       @word_set |= terms
       unless terms.empty?
         @rows << {sentiment => indicies(terms)}
       end
-    end
-    
-    # Helper function to determine whether we should keep the word or not
-    def passes(word)
-      !@bloom_filter.includes?(word)
     end
     
     
@@ -90,7 +76,7 @@ module Guise
     
     # Returns a prediction based on training data when fed in a block of text
     def predict(text)
-      indexes = indicies(clean(text)).compact
+      indexes = indicies(Guise::NLP.clean(text)).compact
       model.predict(indexes)
     end
     
@@ -115,6 +101,10 @@ module Guise
       end.join("\n")
     end
     
+    def to_s
+      "< Guise::Trainer: Current size: #{@word_set.length} >"
+    end
+    
     private
     
     %w[positive negative].each do |sentiment|
@@ -131,16 +121,6 @@ module Guise
         if row[:answer].values.first != "-2"
           vote(row[:answer].values.first.to_i, row[:question])
         end
-      end
-    end
-    
-    def load_bloom_filter!
-      @bloom_filter = BloominSimple.new(50_000) do |word|
-        Digest::SHA1.digest(word.downcase.strip).unpack("VVV")
-      end
-      
-      File.open(File.join(File.dirname(__FILE__), "../../data/stopwords.txt")).each do |line| 
-        @bloom_filter.add(line)
       end
     end
   end
