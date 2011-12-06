@@ -13,19 +13,28 @@ module Guise
     
     
     # Can take in a dictionary of words stored in the database or wherever
-    def initialize(word_set = [], load_data = true)
+    def initialize(word_set = [])
       @rows = []
-      @word_set = word_set
-      if load_data
-        puts "Loading training data..."
-        load_training_data! 
-        puts "Loading positive training data..."
-        load_positive_training_data!
-        puts "Loading negative training data..."
-        load_negative_training_data!
-      end
+      require 'benchmark'
+      
+      
+      
+      
+      
+      @word_set = word_set 
+      @word_set |= initial_word_set
+      @rows = initial_rows
+      
     end
     
+    
+    def initial_word_set
+      YAML::load(File.open(File.join(DIR, "../../data/initial_word_set.yml")))
+    end
+    
+    def initial_rows
+      YAML::load(File.open(File.join(DIR, "../../data/initial_rows.yml")))
+    end
     
     # Deprecating this method call to use Guise::NLP.clean(text) instead
     def clean(text = "")
