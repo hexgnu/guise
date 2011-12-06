@@ -13,18 +13,14 @@ module Guise
     
     
     # Can take in a dictionary of words stored in the database or wherever
-    def initialize(word_set = [])
+    def initialize(word_set = [], load_data = true)
       @rows = []
-      require 'benchmark'
-      
-      
-      
-      
-      
       @word_set = word_set 
-      @word_set |= initial_word_set
-      @rows = initial_rows
       
+      if load_data
+        @rows = initial_rows
+        @word_set |= initial_word_set
+      end
     end
     
     
@@ -112,25 +108,6 @@ module Guise
     
     def to_s
       "< Guise::Trainer: Current size: #{@word_set.length} >"
-    end
-    
-    private
-    
-    %w[positive negative].each do |sentiment|
-      define_method("load_#{sentiment}_training_data!") do
-        File.open(File.join(DIR, "../../data/#{sentiment}_words.txt")).each do |line|
-          vote((sentiment == "positive") ? 1 : -1, line)
-        end
-      end
-    end
-    
-    
-    def load_training_data!
-      YAML::load(File.open(File.join(DIR, "../../data/output.yml"))).each do |row|
-        if row[:answer].values.first != "-2"
-          vote(row[:answer].values.first.to_i, row[:question])
-        end
-      end
     end
   end
 end
